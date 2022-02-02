@@ -3,7 +3,8 @@ MAINTAINER Patrick Copeland ptcnop
 
 ENV YARA_VERSION 3.8.1
 ENV YARA_PY_VERSION 3.8.1
-ENV SSDEEP ssdeep-2.13
+# ENV SSDEEP ssdeep-2.13
+ENV SSDEEP ssdeep-2.14.1
 
 COPY requirements.txt /opt/multiscanner/
 
@@ -15,6 +16,7 @@ RUN apk add --no-cache \
         jpeg \
         libffi \
         python3 \
+        py3-pip \
         su-exec \
         tini \
         zip \
@@ -37,9 +39,10 @@ RUN apk add --no-cache \
        python3-dev \
        zlib-dev \
   # ssdeep
+  # && wget -O /tmp/$SSDEEP.tar.gz https://downloads.sourceforge.net/project/ssdeep/$SSDEEP/$SSDEEP.tar.gz \
   && echo "Install ssdeep from source..." \
   && cd /tmp \
-  && wget -O /tmp/$SSDEEP.tar.gz https://downloads.sourceforge.net/project/ssdeep/$SSDEEP/$SSDEEP.tar.gz \
+  && wget -O /tmp/$SSDEEP.tar.gz https://github.com/ssdeep-project/ssdeep/releases/download/release-2.14.1/ssdeep-2.14.1.tar.gz \
   && tar zxvf $SSDEEP.tar.gz \
   && cd $SSDEEP \
   && ./configure \
@@ -69,6 +72,7 @@ RUN apk add --no-cache \
   # install ms dependencies
   && cd /opt/multiscanner \
   && pip3 install --upgrade pip \
+  && pip3 install wheel \
   && pip3 install -r requirements.txt \
   # clean up
   && rm -rf /tmp/* \

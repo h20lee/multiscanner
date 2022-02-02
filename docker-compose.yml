@@ -15,11 +15,13 @@ services:
       dockerfile: docker_utils/Dockerfile
     command: multiscanner-web
     ports:
-     - "127.0.0.1:8000:8000"
+     - "8000:8000"
   api:
     build:
       context: .
       dockerfile: docker_utils/Dockerfile
+    volumes:
+     - "/var/run/clamav:/var/run/clamav"
     command: /wait-for-it.sh elastic:9200 -- multiscanner-api
     ports:
      - "127.0.0.1:8080:8080"

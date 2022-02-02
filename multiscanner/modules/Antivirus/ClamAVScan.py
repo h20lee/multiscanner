@@ -13,6 +13,7 @@ __license__ = "MPL 2.0"
 
 DEFAULTCONF = {
     "ENABLED": True,
+    "host" : "192.168.2.168"
 }
 
 
@@ -24,16 +25,17 @@ def check(conf=DEFAULTCONF):
     return True
 
 
-def _connect_clam():
+def _connect_clam(conf=DEFAULTCONF):
     try:
         clamScanner = pyclamd.ClamdUnixSocket()
         clamScanner.ping()
+        print("checking for unixsocket")
     except pyclamd.ConnectionError:
-        clamScanner = pyclamd.ClamdNetworkSocket()
+        clamScanner = pyclamd.ClamdNetworkSocket(conf['host'])
         try:
             clamScanner.ping()
         except pyclamd.ConnectionError:
-            raise ValueError("Unable to connect to clamd")
+            raise ValueError("Could not connect to clamd server either by unix or network socket")
     return clamScanner
 
 
@@ -43,6 +45,7 @@ def scan(filelist, conf=DEFAULTCONF):
         clamScanner = _connect_clam()
     except Exception as e:
         # TODO: log exception
+        print("clamavscan ",e)
         return None
 
     # Scan each file from filelist for virus

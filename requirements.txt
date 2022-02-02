@@ -2,7 +2,8 @@
 future
 six
 configparser
-click==6.7
+click
+#click==6.7
 #Required by modules
 bitstring
 boltons
@@ -28,11 +29,12 @@ sqlalchemy
 sqlalchemy-utils
 sqlalchemy-datatables
 #Required by storage modules
-elasticsearch>=6.0.0,<7.0.0
-elasticsearch-curator
+elasticsearch>=6.0.0,<8.0.0
+elasticsearch-curator==5.8.4
 pymongo
 #Required for distributed
 celery
 flask_cors
 #Required by utils
 tqdm
+cryptography<=3.3.2
