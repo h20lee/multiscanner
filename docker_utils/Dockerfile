@@ -71,7 +71,8 @@ RUN apk add --no-cache \
   && git clone --depth 1 https://github.com/Yara-Rules/rules.git /opt/multiscanner/etc/yarasigs/Yara-Rules \
   # install ms dependencies
   && cd /opt/multiscanner \
-  && pip3 install --upgrade pip \
+  && pip3 install --upgrade pip==21.3.1 \
+  #&& pip3 install --upgrade pip \
   && pip3 install wheel \
   && pip3 install -r requirements.txt \
   # clean up

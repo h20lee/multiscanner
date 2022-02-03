@@ -2,6 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from __future__ import division, absolute_import, with_statement, print_function, unicode_literals
+from multiscanner.config import CONFIG
+
 try:
     import pyclamd
 except ImportError:
@@ -25,13 +27,13 @@ def check(conf=DEFAULTCONF):
     return True
 
 
-def _connect_clam(conf=DEFAULTCONF):
+def _connect_clam(host):
     try:
         clamScanner = pyclamd.ClamdUnixSocket()
         clamScanner.ping()
         print("checking for unixsocket")
     except pyclamd.ConnectionError:
-        clamScanner = pyclamd.ClamdNetworkSocket(conf['host'])
+        clamScanner = pyclamd.ClamdNetworkSocket(host)
         try:
             clamScanner.ping()
         except pyclamd.ConnectionError:
@@ -42,7 +44,7 @@ def _connect_clam(conf=DEFAULTCONF):
 def scan(filelist, conf=DEFAULTCONF):
     results = []
     try:
-        clamScanner = _connect_clam()
+        clamScanner = _connect_clam(conf['host'])
     except Exception as e:
         # TODO: log exception
         print("clamavscan ",e)
