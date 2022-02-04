@@ -16,6 +16,7 @@ __license__ = "MPL 2.0"
 DEFAULTCONF = {
     "ENABLED": True,
     "host" : "192.168.2.168"
+    "port" : "3310"
 }
 
 
@@ -27,13 +28,13 @@ def check(conf=DEFAULTCONF):
     return True
 
 
-def _connect_clam(host):
+def _connect_clam(host,port):
     try:
         clamScanner = pyclamd.ClamdUnixSocket()
         clamScanner.ping()
         print("checking for unixsocket")
     except pyclamd.ConnectionError:
-        clamScanner = pyclamd.ClamdNetworkSocket(host)
+        clamScanner = pyclamd.ClamdNetworkSocket(host+":"+port)
         try:
             clamScanner.ping()
         except pyclamd.ConnectionError:
@@ -44,7 +45,7 @@ def _connect_clam(host):
 def scan(filelist, conf=DEFAULTCONF):
     results = []
     try:
-        clamScanner = _connect_clam(conf['host'])
+        clamScanner = _connect_clam(conf['host'],conf['port'])
     except Exception as e:
         # TODO: log exception
         print("clamavscan ",e)
